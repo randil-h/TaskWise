@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">TaskWise</string>
+    <string name="add_task">Add Task</string>
+    <string name="date_picker_text">Select deadline</string>
+    <string name="task_title">Task Title</string>
+    <string name="select_priority">Select Priority</string>
+    <string name="save_task">Save Task</string>
+    <string name="task_description">Task Description</string>
+    <string name="priority">Priority</string>
+    <string name="high_priority">High</string>
+    <string name="medium_priority">Medium</string>
+    <string name="low_priority">Low</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
+    <string-array name="priority_options">
+        <item>Low</item>
+        <item>Medium</item>
+        <item>High</item>
+    </string-array>
+</resources>
