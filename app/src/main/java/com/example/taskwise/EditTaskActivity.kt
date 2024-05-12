@@ -64,9 +64,9 @@ class EditTaskActivity : AppCompatActivity() {
 
         val priorityRadioGroup = findViewById<RadioGroup>(R.id.priorityRadioGroup)
         when (task.priority) {
-            Priority.LOW.toString() -> priorityRadioGroup.check(R.id.lowPriorityRadioButton)
-            Priority.MEDIUM.toString() -> priorityRadioGroup.check(R.id.mediumPriorityRadioButton)
-            Priority.HIGH.toString() -> priorityRadioGroup.check(R.id.highPriorityRadioButton)
+            Priority.Low.toString() -> priorityRadioGroup.check(R.id.lowPriorityRadioButton)
+            Priority.Medium.toString() -> priorityRadioGroup.check(R.id.mediumPriorityRadioButton)
+            Priority.High.toString() -> priorityRadioGroup.check(R.id.highPriorityRadioButton)
         }
 
         val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
@@ -106,10 +106,10 @@ class EditTaskActivity : AppCompatActivity() {
                 val descriptionEditText = findViewById<EditText>(R.id.descriptionEditText)
                 val priorityRadioGroup = findViewById<RadioGroup>(R.id.priorityRadioGroup)
                 val selectedPriority = when (priorityRadioGroup.checkedRadioButtonId) {
-                    R.id.lowPriorityRadioButton -> Priority.LOW
-                    R.id.mediumPriorityRadioButton -> Priority.MEDIUM
-                    R.id.highPriorityRadioButton -> Priority.HIGH
-                    else -> Priority.LOW
+                    R.id.lowPriorityRadioButton -> Priority.Low
+                    R.id.mediumPriorityRadioButton -> Priority.Medium
+                    R.id.highPriorityRadioButton -> Priority.High
+                    else -> Priority.Low
                 }
 
                 val task = Task(

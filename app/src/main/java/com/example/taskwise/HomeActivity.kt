@@ -1,13 +1,11 @@
 package com.example.taskwise
 
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -105,23 +103,15 @@ class HomeActivity : AppCompatActivity() {
         lifecycleScope.launch(Dispatchers.IO) {
             taskDao.deleteTask(task)
             withContext(Dispatchers.Main) {
-                val snackbar = Snackbar.make(view, "Task deleted", Snackbar.LENGTH_LONG)
-                snackbar.setActionTextColor(Color.WHITE)
-                snackbar.setAction("Undo") {
-                    lifecycleScope.launch(Dispatchers.IO) {
-                        taskDao.insertTask(deletedTask)
-                        Snackbar.make(view, "Task restored", Snackbar.LENGTH_SHORT).show()
-                        loadTasks()
+                Snackbar.make(view, "Task deleted", Snackbar.LENGTH_LONG)
+                    .setAction("Undo") {
+                        lifecycleScope.launch(Dispatchers.IO) {
+                            taskDao.insertTask(deletedTask)
+                            Snackbar.make(view, "Task restored", Snackbar.LENGTH_SHORT).show()
+                            loadTasks()
+                        }
                     }
-                }
-
-                // Customize snackbar background and text color
-                val snackbarView = snackbar.view
-                snackbarView.setBackgroundColor(Color.RED)
-                val textView = snackbarView.findViewById(com.google.android.material.R.id.snackbar_text) as TextView
-                textView.setTextColor(Color.BLACK)
-
-                snackbar.show()
+                    .show()
                 loadTasks()
             }
         }
