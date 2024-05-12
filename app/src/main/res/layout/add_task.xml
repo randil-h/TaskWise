@@ -93,12 +93,14 @@
             android:id="@+id/showDatePickerButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="showDatePicker"
-            android:text="@string/date_picker_text"
+            android:backgroundTint="@color/blue"
             android:fontFamily="@font/product_sans_regular"
-            android:textSize="16sp"
+            android:onClick="showDatePicker"
+            android:paddingHorizontal="16dp"
             android:paddingVertical="12dp"
-            android:paddingHorizontal="16dp" />
+            android:text="@string/date_picker_text"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/selectedDateTextView"
@@ -120,11 +122,13 @@
         android:layout_below="@id/deadlineLayout"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="24dp"
-        android:text="@string/save_task"
-        android:onClick="saveTask"
+        android:backgroundTint="@color/blue"
         android:fontFamily="@font/product_sans_regular"
-        android:textSize="16sp"
+        android:onClick="saveTask"
+        android:paddingHorizontal="24dp"
         android:paddingVertical="12dp"
-        android:paddingHorizontal="24dp" />
+        android:text="@string/save_task"
+        android:textColor="@color/white"
+        android:textSize="16sp" />
 
 </RelativeLayout>

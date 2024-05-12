@@ -4,7 +4,9 @@
     <color name="white">#FFFFFFFF</color>
     <color name="red">#EC407A</color>
     <color name="green">#66BB6A</color>
-    <color name="blue">#42A5F5</color>
+    <color name="blue">#0091EA</color>
     <color name="beige">#FFE57F</color>
     <color name="amber">#FFBF00</color>
+    <color name="lightBeige">#F5F5DC</color>
+    <color name="darkBeige">#A0522D</color>
 </resources>

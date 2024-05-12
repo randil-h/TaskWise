@@ -50,7 +50,9 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="16dp"
+        android:backgroundTint="@color/blue"
         android:fontFamily="@font/product_sans_regular"
-        android:text="@string/add_task" />
+        android:text="@string/add_task"
+        android:textColor="@color/white" />
 
 </RelativeLayout>
