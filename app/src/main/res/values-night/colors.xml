@@ -2,4 +2,6 @@
 <resources>
     <color name="beige">#A0522D</color>
     <color name="blue">#2962FF</color>
+    <color name="addtextcol">#FFFFFF</color>
+    <color name="hint_col">#FFE57F</color>
 </resources>

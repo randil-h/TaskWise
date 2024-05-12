@@ -1,20 +1,23 @@
 package com.example.taskwise
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
-import android.view.ContextMenu
-import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.Button
 import android.widget.Spinner
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class HomeActivity : AppCompatActivity() {
 
@@ -22,7 +25,9 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var taskAdapter: TaskAdapter
     private lateinit var sortBySpinner: Spinner
-    private val sortOptions = arrayOf("Title A-Z", "Title Z-A", "Priority Low-High", "Priority High-Low")
+    private val sortOptions = arrayOf("Title A-Z", "Title Z-A", "Priority Low-High", "Priority High-Low", "Nearest Deadline", "Furthest Deadline")
+
+    private var tasks: List<Task> = emptyList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,57 +54,101 @@ class HomeActivity : AppCompatActivity() {
 
         recyclerView = findViewById(R.id.taskRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
-        taskAdapter = TaskAdapter(emptyList())
+        taskAdapter = TaskAdapter(tasks) { task ->
+            val intent = Intent(this, EditTaskActivity::class.java)
+            intent.putExtra("taskId", task.id)
+            startActivity(intent)
+        }
         recyclerView.adapter = taskAdapter
 
         loadTasks()
 
-        val addTaskButton = findViewById<Button>(R.id.addTaskButton)
+        val addTaskButton = findViewById<FloatingActionButton>(R.id.addTaskButton)
         addTaskButton.setOnClickListener {
             val intent = Intent(this, AddTaskActivity::class.java)
             startActivity(intent)
         }
-    }
 
-    override fun onCreateContextMenu(
-        menu: ContextMenu?,
-        v: View?,
-        menuInfo: ContextMenu.ContextMenuInfo?
-    ) {
-        super.onCreateContextMenu(menu, v, menuInfo)
-        menuInflater.inflate(R.menu.task_context_menu, menu)
-    }
+        val itemTouchHelperCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+                // Not used for swipe-to-delete
+                return false
+            }
 
-    override fun onContextItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.action_edit -> {
-                // Handle edit action
-                true
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val position = viewHolder.adapterPosition
+                val taskToDelete = tasks[position]
+                deleteTask(taskToDelete, viewHolder.itemView)
             }
-            R.id.action_delete -> {
-                // Handle delete action
-                true
-            }
-            else -> super.onContextItemSelected(item)
         }
-    }
 
-    override fun onResume() {
-        super.onResume()
-        loadTasks()
+        val itemTouchHelper = ItemTouchHelper(itemTouchHelperCallback)
+        itemTouchHelper.attachToRecyclerView(recyclerView)
     }
 
     private fun loadTasks() {
         lifecycleScope.launch(Dispatchers.IO) {
-            val tasks = taskDao.getAll()
+            tasks = taskDao.getAll()
             runOnUiThread {
                 taskAdapter.updateTasks(tasks)
             }
         }
     }
 
-    private fun sortTasks(selectedOption: String) {
-        // Implement sorting logic based on the selected option
-        // For example, you can update the RecyclerView adapter with sorted data
+    private fun deleteTask(task: Task, view: View) {
+        val deletedTask = task.copy()
+
+        lifecycleScope.launch(Dispatchers.IO) {
+            taskDao.deleteTask(task)
+            withContext(Dispatchers.Main) {
+                val snackbar = Snackbar.make(view, "Task deleted", Snackbar.LENGTH_LONG)
+                snackbar.setActionTextColor(Color.WHITE)
+                snackbar.setAction("Undo") {
+                    lifecycleScope.launch(Dispatchers.IO) {
+                        taskDao.insertTask(deletedTask)
+                        Snackbar.make(view, "Task restored", Snackbar.LENGTH_SHORT).show()
+                        loadTasks()
+                    }
+                }
+
+                // Customize snackbar background and text color
+                val snackbarView = snackbar.view
+                snackbarView.setBackgroundColor(Color.RED)
+                val textView = snackbarView.findViewById(com.google.android.material.R.id.snackbar_text) as TextView
+                textView.setTextColor(Color.BLACK)
+
+                snackbar.show()
+                loadTasks()
+            }
+        }
     }
+
+    private fun sortTasks(selectedOption: String) {
+        when (selectedOption) {
+            "Title A-Z" -> {
+                tasks = tasks.sortedBy { it.title }
+            }
+            "Title Z-A" -> {
+                tasks = tasks.sortedByDescending { it.title }
+            }
+            "Priority Low-High" -> {
+                tasks = tasks.sortedBy { Priority.valueOf(it.priority) }
+            }
+            "Priority High-Low" -> {
+                tasks = tasks.sortedByDescending { Priority.valueOf(it.priority) }
+            }
+            "Nearest Deadline" -> {
+                tasks = tasks.sortedBy { it.deadline }
+            }
+            "Furthest Deadline" -> {
+                tasks = tasks.sortedByDescending { it.deadline }
+            }
+        }
+        taskAdapter.updateTasks(tasks)
+    }
+
 }

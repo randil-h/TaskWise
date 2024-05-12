@@ -5,16 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
-    tools:context=".AddTaskActivity">
+    tools:context=".EditTaskActivity">
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/titleTextInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/task_title"
-        app:hintTextColor="@color/hint_col"
-        app:endIconMode="clear_text"
-        style="@style/RoundedTextInputLayout">
+        app:hintTextColor="@color/beige"
+        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/titleEditText"
@@ -22,7 +20,7 @@
             android:layout_height="wrap_content"
             android:padding="12dp"
             android:textSize="16sp"
-            android:fontFamily="@font/product_sans_bold" />
+            android:fontFamily="@font/product_sans_regular" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -30,29 +28,22 @@
         android:id="@+id/descriptionTextInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="36dp"
         android:layout_below="@id/titleTextInputLayout"
-        android:hint="@string/task_description"
-        app:hintTextColor="@color/hint_col"
-        app:endIconMode="clear_text"
-        style="@style/RoundedTextInputLayout">
+        app:hintTextColor="@color/beige"
+        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/descriptionEditText"
             android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:minLines="5"
-            android:maxLines="10"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="36dp"
             android:padding="12dp"
             android:textSize="16sp"
-            android:scrollbars="vertical"
-            android:inputType="textMultiLine"
-            android:gravity="top"
             android:fontFamily="@font/product_sans_regular" />
+
 
     </com.google.android.material.textfield.TextInputLayout>
 
-    <!-- Priority Label -->
     <TextView
         android:id="@+id/priorityLabelTextView"
         android:layout_width="wrap_content"
@@ -71,32 +62,32 @@
         android:layout_marginTop="8dp"
         android:orientation="horizontal">
 
-        <com.google.android.material.radiobutton.MaterialRadioButton
+        <RadioButton
             android:id="@+id/lowPriorityRadioButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/product_sans"
             android:text="@string/low_priority"
             android:textSize="16sp"
-            android:fontFamily="@font/product_sans"
-            app:buttonTint="@color/green" />
+            android:buttonTint="@color/green" />
 
-        <com.google.android.material.radiobutton.MaterialRadioButton
+        <RadioButton
             android:id="@+id/mediumPriorityRadioButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/product_sans"
             android:text="@string/medium_priority"
             android:textSize="16sp"
-            android:fontFamily="@font/product_sans"
-            app:buttonTint="@color/amber" />
+            android:buttonTint="@color/amber" />
 
-        <com.google.android.material.radiobutton.MaterialRadioButton
+        <RadioButton
             android:id="@+id/highPriorityRadioButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/product_sans"
             android:text="@string/high_priority"
             android:textSize="16sp"
-            android:fontFamily="@font/product_sans"
-            app:buttonTint="@color/red" />
+            android:buttonTint="@color/red" />
 
     </RadioGroup>
 
@@ -134,7 +125,7 @@
 
     </LinearLayout>
 
-    <com.google.android.material.button.MaterialButton
+    <Button
         android:id="@+id/saveTaskButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -143,7 +134,7 @@
         android:layout_marginTop="24dp"
         android:backgroundTint="@color/beige"
         android:fontFamily="@font/product_sans_regular"
-        android:onClick="saveTask"
+        android:onClick="saveEditedTask"
         android:paddingHorizontal="24dp"
         android:paddingVertical="12dp"
         android:text="@string/save_task"

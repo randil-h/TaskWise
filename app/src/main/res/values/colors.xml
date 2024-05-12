@@ -9,4 +9,6 @@
     <color name="amber">#FFBF00</color>
     <color name="lightBeige">#F5F5DC</color>
     <color name="darkBeige">#A0522D</color>
+    <color name="addtextcol">#000000</color>
+    <color name="hint_col">#A0522D</color>
 </resources>

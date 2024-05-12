@@ -1,6 +1,8 @@
 package com.example.taskwise
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.widget.EditText
@@ -11,6 +13,9 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -39,6 +44,42 @@ class AddTaskActivity : AppCompatActivity() {
             selectedPriority = radioButton.text.toString()
             Log.d("AddTaskActivity", "Selected Priority: $selectedPriority")
         }
+
+        val titleEditText = findViewById<TextInputEditText>(R.id.titleEditText)
+        val titleTextInputLayout = findViewById<TextInputLayout>(R.id.titleTextInputLayout)
+
+        titleEditText.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+
+            override fun afterTextChanged(s: Editable?) {
+                // Hide the hint when text is typed
+                if (!s.isNullOrEmpty()) {
+                    titleTextInputLayout.hint = null
+                } else {
+                    titleTextInputLayout.hint = getString(R.string.task_title)
+                }
+            }
+        })
+
+        val descriptionEditText = findViewById<TextInputEditText>(R.id.descriptionEditText)
+        val descriptionTextInputLayout = findViewById<TextInputLayout>(R.id.descriptionTextInputLayout)
+
+        descriptionEditText.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+
+            override fun afterTextChanged(s: Editable?) {
+                // Hide the hint when text is typed
+                if (!s.isNullOrEmpty()) {
+                    descriptionTextInputLayout.hint = null
+                } else {
+                    descriptionTextInputLayout.hint = getString(R.string.task_description)
+                }
+            }
+        })
     }
 
     fun saveTask(view: View) {
@@ -56,7 +97,8 @@ class AddTaskActivity : AppCompatActivity() {
             Log.d("AddTaskActivity", "Task inserted: $task")
 
             withContext(Dispatchers.Main) {
-                Toast.makeText(applicationContext, "Task saved", Toast.LENGTH_SHORT).show()
+                val rootView = findViewById<View>(android.R.id.content)
+                Snackbar.make(rootView, "Task saved", Snackbar.LENGTH_SHORT).show()
                 finish()
             }
         }
