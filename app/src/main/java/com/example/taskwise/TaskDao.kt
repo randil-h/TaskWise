@@ -1,5 +1,6 @@
 package com.example.taskwise
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -18,7 +19,7 @@ interface TaskDao {
     fun updateTask(task: Task)
 
     @Query("SELECT * FROM task_table")
-    fun getAll(): List<Task>
+    fun getAllLiveData(): LiveData<List<Task>>
 
     @Query("SELECT * FROM task_table WHERE id = :taskId")
     fun getTaskById(taskId: Long): Task

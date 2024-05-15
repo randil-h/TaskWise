@@ -7,6 +7,7 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -43,7 +44,6 @@ class HomeActivity : AppCompatActivity() {
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
-                // Handle nothing selected
             }
         }
 
@@ -59,6 +59,7 @@ class HomeActivity : AppCompatActivity() {
         }
         recyclerView.adapter = taskAdapter
 
+        // Observe LiveData for task updates
         loadTasks()
 
         val addTaskButton = findViewById<FloatingActionButton>(R.id.addTaskButton)
@@ -73,7 +74,6 @@ class HomeActivity : AppCompatActivity() {
                 viewHolder: RecyclerView.ViewHolder,
                 target: RecyclerView.ViewHolder
             ): Boolean {
-                // Not used for swipe-to-delete
                 return false
             }
 
@@ -89,12 +89,10 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun loadTasks() {
-        lifecycleScope.launch(Dispatchers.IO) {
-            tasks = taskDao.getAll()
-            runOnUiThread {
-                taskAdapter.updateTasks(tasks)
-            }
-        }
+        taskDao.getAllLiveData().observe(this, Observer { newTasks ->
+            tasks = newTasks
+            taskAdapter.updateTasks(tasks)
+        })
     }
 
     private fun deleteTask(task: Task, view: View) {
@@ -107,8 +105,10 @@ class HomeActivity : AppCompatActivity() {
                     .setAction("Undo") {
                         lifecycleScope.launch(Dispatchers.IO) {
                             taskDao.insertTask(deletedTask)
-                            Snackbar.make(view, "Task restored", Snackbar.LENGTH_SHORT).show()
-                            loadTasks()
+                            withContext(Dispatchers.Main) {
+                                Snackbar.make(view, "Task restored", Snackbar.LENGTH_SHORT).show()
+                                loadTasks()
+                            }
                         }
                     }
                     .show()
@@ -140,5 +140,4 @@ class HomeActivity : AppCompatActivity() {
         }
         taskAdapter.updateTasks(tasks)
     }
-
 }
